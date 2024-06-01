@@ -8,7 +8,7 @@ const updateDisplay = () => {
   display.value = currentInput;
 };
 
-const appendNumber = function(number){
+const appendNumber = function (number) {
   if (resetScreen) {
     currentInput = "";
     resetScreen = false;
@@ -17,18 +17,24 @@ const appendNumber = function(number){
   updateDisplay();
 };
 
-const chooseOperatorValues = function(selectedOperator){
-  if (currentInput === "" && selectedOperator !== "=") return; //am using the guard clause
+const chooseOperatorValues = function (selectedOperator) {
+  if (currentInput === "" && selectedOperator !== "=") return; // am using guard clause
 
   if (firstOperand === null) {
     firstOperand = parseFloat(currentInput);
   } else if (operator) {
     firstOperand = operate(firstOperand, parseFloat(currentInput), operator);
-    display.value = firstOperand;
+    if (selectedOperator === "=") {
+      currentInput = firstOperand.toString();
+      updateDisplay();
+      firstOperand = null;
+    }
   }
 
   operator = selectedOperator;
-  resetScreen = true;
+  if (selectedOperator !== "=") {
+    resetScreen = true;
+  }
 };
 
 const operate = function (operatorA, operatorB, operator) {
@@ -41,6 +47,8 @@ const operate = function (operatorA, operatorB, operator) {
       return operatorA * operatorB;
     case "/":
       return operatorA / operatorB;
+    case "%":
+      return (operatorA * operatorB) / 100;
     default:
       return operatorB;
   }
@@ -60,13 +68,14 @@ document
     const { target } = event;
     const value = target.value;
 
-    if (!target.matches("button")) return; //am using the guard clause
+    if (!target.matches("button")) return; // am using guard clause
 
     switch (value) {
       case "+":
       case "-":
       case "*":
       case "/":
+      case "%":
         chooseOperatorValues(value);
         break;
       case "=":
@@ -75,7 +84,7 @@ document
         break;
       case ".":
         if (!currentInput.includes(".")) {
-          return appendNumber(value);
+          appendNumber(value);
         }
         break;
       case "clear-all":
