@@ -1,7 +1,7 @@
 const display = document.querySelector(".screen"); // the display represents the calculator screen
 let currentInput = "";
 let operator = "";
-let firstOperand = null;
+let firstOpr = null;
 let resetScreen = false;
 
 const updateDisplay = () => {
@@ -20,14 +20,14 @@ const appendNumber = function (number) {
 const chooseOperatorValues = function (selectedOpr) {
   if (currentInput === "" && selectedOpr !== "=") return; // am using guard clause
 
-  if (firstOperand === null) {
-    firstOperand = parseFloat(currentInput);
+  if (firstOpr === null) {
+    firstOpr = parseFloat(currentInput);
   } else if (operator) {
-    firstOperand = operate(firstOperand, parseFloat(currentInput), operator);
+    firstOpr = operate(firstOpr, parseFloat(currentInput), operator);
     if (selectedOpr === "=") {
-      currentInput = firstOperand.toString();
+      currentInput = firstOpr.toString();
       updateDisplay();
-      firstOperand = null;
+      firstOpr = null;
     }
   }
 
@@ -58,7 +58,7 @@ const operate = function (operatorA, operatorB, operator) {
 const clearAllValues = () => {
   currentInput = "";
   operator = "";
-  firstOperand = null;
+  firstOpr = null;
   resetScreen = false;
   updateDisplay();
 };
