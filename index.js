@@ -1,4 +1,4 @@
-const display = document.querySelector(".screen");
+const display = document.querySelector(".screen"); // the display represents the calculator screen
 let currentInput = "";
 let operator = "";
 let firstOperand = null;
@@ -17,27 +17,28 @@ const appendNumber = function (number) {
   updateDisplay();
 };
 
-const chooseOperatorValues = function (selectedOperator) {
-  if (currentInput === "" && selectedOperator !== "=") return; // am using guard clause
+const chooseOperatorValues = function (selectedOpr) {
+  if (currentInput === "" && selectedOpr !== "=") return; // am using guard clause
 
   if (firstOperand === null) {
     firstOperand = parseFloat(currentInput);
   } else if (operator) {
     firstOperand = operate(firstOperand, parseFloat(currentInput), operator);
-    if (selectedOperator === "=") {
+    if (selectedOpr === "=") {
       currentInput = firstOperand.toString();
       updateDisplay();
       firstOperand = null;
     }
   }
 
-  operator = selectedOperator;
-  if (selectedOperator !== "=") {
+  operator = selectedOpr;
+  if (selectedOpr !== "=") {
     resetScreen = true;
   }
 };
 
 const operate = function (operatorA, operatorB, operator) {
+  // parforming the calculations
   switch (operator) {
     case "+":
       return operatorA + operatorB;
@@ -62,37 +63,35 @@ const clearAllValues = () => {
   updateDisplay();
 };
 
-document
-  .querySelector(".calculator-buttons")
-  .addEventListener("click", (event) => {
-    const { target } = event;
-    const value = target.value;
+document.querySelector(".calculator-buttons").addEventListener("click", (e) => {
+  const { target } = e; // destructuring the target out of the event
+  const { value } = target; // destructuring the value out of the target
 
-    if (!target.matches("button")) return; // am using guard clause
+  if (!target.matches("button")) return; // am using guard clause
 
-    switch (value) {
-      case "+":
-      case "-":
-      case "*":
-      case "/":
-      case "%":
-        chooseOperatorValues(value);
-        break;
-      case "=":
-        chooseOperatorValues(value);
-        operator = "";
-        break;
-      case ".":
-        if (!currentInput.includes(".")) {
-          appendNumber(value);
-        }
-        break;
-      case "clear-all":
-        clearAllValues();
-        break;
-      default:
-        if (Number.isInteger(parseFloat(value))) {
-          appendNumber(value);
-        }
-    }
-  });
+  switch (value) {
+    case "+":
+    case "-":
+    case "*":
+    case "/":
+    case "%":
+      chooseOperatorValues(value);
+      break;
+    case "=":
+      chooseOperatorValues(value);
+      operator = "";
+      break;
+    case ".":
+      if (!currentInput.includes(".")) {
+        appendNumber(value);
+      }
+      break;
+    case "clear-all-values":
+      clearAllValues();
+      break;
+    default:
+      if (Number.isInteger(parseFloat(value))) {
+        appendNumber(value);
+      }
+  }
+});
